@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Button, StyleSheet, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
+import { ScrollView, RefreshControl } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPumpStateApi } from '@/utils/api/fetchPumpData';
+import { fetchDeviceDataAPI } from '@/utils/api/fetchDeviceData';
 import { RootState } from '@/utils/redux/store';
 import { setPumpState } from '@/utils/redux/pump/actions';
+import { ActivityIndicator, Card, MD2Colors, Switch, Title } from 'react-native-paper';
+import SoilMoistureCard from '@/components/card/SoilMoistureCard';
+import LightLevelCard from '@/components/card/LightLevelCard';
+import WaterLevelCard from '@/components/card/WaterLevelCard';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const pumpState = useSelector((state: RootState) => state.pump.state);
+  
+  const [ldr, setLdr] = useState(0);
+  const [soilMois, setSoilMois] = useState(0);
+  const [waterLevel, setWaterLevel] = useState(0);
   
   const [refreshing, setRefreshing] = useState(false);
 
@@ -18,8 +27,14 @@ const Dashboard = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const value = await fetchPumpStateApi();
-      dispatch(setPumpState({ state: value })); 
+      const data = await fetchDeviceDataAPI();
+      dispatch(setPumpState({ state: data.state })); 
+      
+      setLdr(data.ldr);
+      setSoilMois(data.soil_moisture);
+      setWaterLevel(data.water_level);
+
+
     } catch (error) {
       console.error("Error refreshing pump state:", error);
     } finally {
@@ -28,38 +43,23 @@ const Dashboard = () => {
   };
 
   if (!pumpState) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <ActivityIndicator animating={true} color={MD2Colors.red800} />;
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-      }
-    >
-      <Text style={styles.title}>Dashboard</Text>
-      <Text style={styles.item}>Pump State: {pumpState}</Text>
-      <Button title="Refresh" onPress={handleRefresh} />
-    </ScrollView>
+    <SafeAreaView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+      >
+        <SoilMoistureCard value={soilMois} />
+        <LightLevelCard value={ldr} />
+        <WaterLevelCard value={waterLevel} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  item: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-});
 
 export default Dashboard;

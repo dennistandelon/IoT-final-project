@@ -1,5 +1,5 @@
 declare module '@env' {
-    export const PUMP_DEVICE_ID: string;
-    export const SOIL_DEVICE_ID: string;
+    export const DEVICE_ID: string;
+    export const DEVICE_TOKEN: string;
     export const JWT_TOKEN: string;
 }
