@@ -14,7 +14,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const pumpState = useSelector((state: RootState) => state.pump.state);
   
-  const [ldr, setLdr] = useState(0);
+  // const [ldr, setLdr] = useState(0);
   const [soilMois, setSoilMois] = useState(0);
   const [waterLevel, setWaterLevel] = useState(0);
   
@@ -30,7 +30,7 @@ const Dashboard = () => {
       const data = await fetchDeviceDataAPI();
       dispatch(setPumpState({ state: data.state })); 
       
-      setLdr(data.ldr);
+      // setLdr(data.ldr);
       setSoilMois(data.soil_moisture);
       setWaterLevel(data.water_level);
 
@@ -54,7 +54,7 @@ const Dashboard = () => {
         }
       >
         <SoilMoistureCard value={soilMois} />
-        <LightLevelCard value={ldr} />
+        {/* <LightLevelCard value={ldr} /> */}
         <WaterLevelCard value={waterLevel} />
       </ScrollView>
     </SafeAreaView>
