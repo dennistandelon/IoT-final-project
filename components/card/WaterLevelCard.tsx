@@ -12,11 +12,11 @@ const WaterLevelCard: React.FC<SensorCardProps> = ({ value }) => {
             <AnimatedCircularProgress
               size={100}
               width={10}
-              fill={(value / 50) * 100}
+              fill={value}
               tintColor="#03A9F4"
               backgroundColor="#E0E0E0"
             />
-            <Text style={styles.percentageText}>{value} cm</Text>
+            <Text style={styles.percentageText}>{value} % </Text>
           </View>
         </Card.Content>
       </Card>

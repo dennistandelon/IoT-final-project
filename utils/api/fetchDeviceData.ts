@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DEVICE_ID, JWT_TOKEN } from '@env';
 
-const API_URL = `http://demo.thingsboard.io/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=state,soil_moisture_value,ldr_value,water_level`;
+const API_URL = `http://demo.thingsboard.io/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=state,soil_moisture_value,water_level`;
 
 export const fetchDeviceDataAPI = async () => {
   const response = await axios.get(API_URL, {
